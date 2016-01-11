@@ -1,8 +1,9 @@
-from collections import defaultdict
 import calendar
-import csv
+from collections import defaultdict
 import copy
+import csv
 import datetime
+import optparse
 import sys
 
 categories = [
@@ -24,9 +25,19 @@ categories = [
     ['Shopping', 'Electronics', 'Sporting Goods'],
 ]
 
+usage = 'python summarize_year.py [options] transactions_filename.csv'
+parser = optparse.OptionParser(usage=usage)
+parser.add_option('-s', '--spreadsheet', action='store_true',
+    dest='spreadsheet',
+    help='Whether to output in a more spreadsheet-friendly format')
+options, args = parser.parse_args()
+if len(args) == 0:
+  print 'Error: must provide the name of the transactions file exported from Mint'
+  sys.exit()
+
 def parse_transaction_list():
   transactions = []
-  with open(sys.argv[1]) as f:
+  with open(args[0]) as f:
     reader = csv.reader(f, delimiter=',')
     next(reader) # skip headers
     for row in reader:
@@ -56,18 +67,22 @@ def get_by_month_for_category(transactions, category_wordlist):
   return month_dict
 
 def print_month_dict(month_dict):
-  total = sum(month_dict.values())
-  divisor = total / 100
-  for month, cost in month_dict.iteritems():
-    print '%s $%.02f\t%s' % (calendar.month_name[month][:3], cost,
-        '#'*int(cost/divisor))
+  if options.spreadsheet:
+    for month, cost in month_dict.iteritems():
+      print '%s;$%.02f' % (calendar.month_name[month][:3], cost)
+  else:
+    total = sum(month_dict.values())
+    divisor = total / 100
+    for month, cost in month_dict.iteritems():
+      print '%s $%.02f\t%s' % (calendar.month_name[month][:3], cost,
+          '#'*int(cost/divisor))
+    print 'TOTAL: $%.02f' % (total,)
 
 transactions = parse_transaction_list()
 for category in categories:
   month_dict = get_by_month_for_category(transactions, category)
   print ', '.join(category)
   print_month_dict(month_dict)
-  print 'TOTAL: $%.02f' % (sum(month_dict.values()),)
   print
   print
 
