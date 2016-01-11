@@ -70,6 +70,7 @@ def print_month_dict(month_dict):
   if options.spreadsheet:
     for month, cost in month_dict.iteritems():
       print '%s;$%.02f' % (calendar.month_name[month][:3], cost)
+    print 'TOTAL;$%.02f' % (sum(month_dict.values()),)
   else:
     total = sum(month_dict.values())
     divisor = total / 100

@@ -5,6 +5,9 @@ lacks simple filtering tools. I haven't found a site that has Mint's
 semi-automated transaction classification with better data analysis, so it
 looks like the best I can do is analyze the data myself.
 
+As an alternative, I had some luck uploading my transactions file directly
+to Statwing.com.
+
 ## summarize_year.py
 
 Log in to Mint and visit
