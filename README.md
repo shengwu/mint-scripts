@@ -14,7 +14,7 @@ download a CSV file.
 
 After you've downloaded your transactions, you can run:
 ```
-python process_year.py transactions.csv
+python summarize_year.py transactions.csv
 ```
 to get a quick visual summary of your spending. Some of the hardcoded
 categories are based on my custom labels in Mint, so you might have to

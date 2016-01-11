@@ -78,5 +78,6 @@ for transaction in transactions:
     debit += transaction[3]
   else:
     credit += transaction[3]
+print 'Cashflow (includes transfers between accts, credit card payments, etc):'
 print 'ALL CREDITS: $%.02f' % (credit, )
 print 'ALL DEBITS: $%.02f' % (debit, )
