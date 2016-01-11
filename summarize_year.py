@@ -3,6 +3,7 @@ import calendar
 import csv
 import copy
 import datetime
+import sys
 
 categories = [
     ['Air Travel'],
@@ -25,7 +26,7 @@ categories = [
 
 def parse_transaction_list():
   transactions = []
-  with open('transactions_2015.csv') as f:
+  with open(sys.argv[1]) as f:
     reader = csv.reader(f, delimiter=',')
     next(reader) # skip headers
     for row in reader:
