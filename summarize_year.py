@@ -60,23 +60,28 @@ def get_by_month_for_category(transactions, category_wordlist):
   month_dict = defaultdict(float)
   for transaction in transactions:
     if matches(transaction, category_wordlist):
-      month_dict[transaction[0].month] += transaction[3]
-  for i in xrange(1, 13):
-    if i not in month_dict:
-      month_dict[i] = 0
+      year_month_tuple = (
+          transaction[0].year, transaction[0].month)
+      month_dict[year_month_tuple] += transaction[3]
+  # TODO: handle missing months?
   return month_dict
+
+def format_year_month_tuple(ymt):
+  return '{} {}'.format(
+      calendar.month_name[ymt[1]][:3], ymt[0])
 
 def print_month_dict(month_dict):
   if options.spreadsheet:
-    for month, cost in month_dict.iteritems():
-      print '%s;$%.02f' % (calendar.month_name[month][:3], cost)
+    for year_month_tuple, cost in sorted(month_dict.items()):
+      print '%s;$%.02f' % (format_year_month_tuple(year_month_tuple), cost)
     print 'TOTAL;$%.02f' % (sum(month_dict.values()),)
   else:
     total = sum(month_dict.values())
     divisor = total / 100
-    for month, cost in month_dict.iteritems():
-      print '%s $%.02f\t%s' % (calendar.month_name[month][:3], cost,
-          '#'*int(cost/divisor))
+    for year_month_tuple, cost in sorted(month_dict.items()):
+      print '%s $%.02f  \t%s' % (
+              format_year_month_tuple(year_month_tuple),
+              cost, '#'*int(cost/divisor))
     print 'TOTAL: $%.02f' % (total,)
 
 transactions = parse_transaction_list()
